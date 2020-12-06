@@ -1,7 +1,17 @@
+{% block content %}
+
 <head>
     <title>Requêtes administrateur</title>
 </head>
 
 <body>
     Requetes administrateur à insérer ici
+
+    {% csrf_token %}
+    {% for field in results  %}
+    {{ field }}
+    {% endfor %}
 </body>
+
+
+{% endblock %}

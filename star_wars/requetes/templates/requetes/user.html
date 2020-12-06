@@ -1,7 +1,17 @@
+{% block content %}
+
 <head>
     <title>Requêtes utilisateur</title>
 </head>
 
 <body>
     Requetes utilisateur à insérer ici
+
+    {% csrf_token %}
+    {% for field in results  %}
+    {{ field }}
+    {% endfor %}
 </body>
+
+
+{% endblock %}

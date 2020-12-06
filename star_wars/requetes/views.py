@@ -22,14 +22,31 @@ db = client[MONGO_DB]
 
 
 def user(request):
-    obj = db.people.find( {'name' : 'C-3PO'}, {'species':1} )
-    return render(request, 'requetes/user.html')
+    mycol = db["people"]
+    obj = mycol.find({'name' : 'C-3PO'}, {'species':1})
+    print(mycol)
+    j = 0
+    for i in mycol:
+        print(i)
+    context = {}
+    results = []  # Put the list of resquest's result to display here
+    context["results"] = results
+    return render(request, 'requetes/user.html', context)
 
 def analyst(request):
-    return render(request, 'requetes/analyst.html')
+    context = {}
+    results = []  # Put the list of resquest's result to display here
+    context["results"] = results
+    return render(request, 'requetes/analyst.html', context)
 
 def admin(request):
-    return render(request, 'requetes/admin.html')
+    context = {}
+    results = []  # Put the list of resquest's result to display here
+    context["results"] = results
+    return render(request, 'requetes/admin.html', context)
 
 def home(request):
-    return render(request, 'requetes/home.html')
+    context = {}
+    results = []  # Put the list of resquest's result to display here
+    context["results"] = results
+    return render(request, 'requetes/home.html', context)

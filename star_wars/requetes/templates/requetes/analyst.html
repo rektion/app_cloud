@@ -1,7 +1,16 @@
+{% block content %}
+
 <head>
     <title>Requêtes analyst</title>
 </head>
 
 <body>
-    Requetes analyste à insérer ici
+    Requetes analyst à insérer ici
+
+    {% csrf_token %}
+    {% for field in results  %}
+    {{ field }}
+    {% endfor %}
 </body>
+
+{% endblock %}
