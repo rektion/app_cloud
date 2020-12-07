@@ -22,7 +22,7 @@ def user(request):
     requete = db.people.find({'height':{"$gt":tmp}},{"name":1})
     for row in requete:
         ret.append(row)
-    tmp = db.starship.find( {"name": "CR90 corvette"}, {"film":1,"_id":0}).toArray()[0].film
+    tmp = (db.starship.find( {"name": "CR90 corvette"}, {"film":1,"_id":0})[0])['film']
     requete = db.film.find({"_id":{"$in": tmp}},{"title":1})
     for row in requete:
         ret.append(row)
@@ -38,22 +38,48 @@ def user(request):
 
 def analyst(request):
     context = {}
-    results = []
-    with open('requetes\\analyst.csv') as csvfile:
-        spamreader = csv.reader(csvfile, delimiter=';')
-        for row in spamreader:
-            results.append(row)
-    context["results"] = results
+    ret = []
+    requete = db.planet.find({"people.films":{"$size":6}},{"name":1})
+    for row in requete:
+        ret.append(row)
+    mean= {"$group" :{"_id":'$species',"avgSize":{"$avg":'$height'}}}
+    sort = {"$sort" : {"avgSize":-1}}
+    limit = {"$limit":1}
+    species_max = (list(db.people.aggregate([mean,sort,limit]))[0])['_id']
+    match= {"$match":{'species':species_max}}
+    unwind = {"$unwind": '$starships'}
+    group= {"$group" :{"_id": '$starships', "count" : {"$sum":1}}}
+    requete = db.people.aggregate([match,unwind,sort,limit]) # Cette requete ne retourne rien, est-ce normal ?
+    for row in requete:
+        ret.append(row)
+    group ={"$group":{"_id":'$species', "avgSize":{"$avg":'$height'},"stdSize":{"$stdDevSamp":'$height'}, "peoples":{"$push":'$$ROOT'}}}
+    project1= {"$project" :{"sum":{"$sum":['$avgSize','$stdSize']},"peoples":1}}
+    unwind={"$unwind":'$peoples'}
+    project2= {"$project" :{"sum": 1, "height" :'$peoples.height',"starships" :'$peoples.starships'}}
+    match={"$match":{"$expr":{"$gt":['$height', '$sum']}}}
+    unwind2={"$unwind":'$starships'}
+    project3={"$project":{"starships":"$starships.class","_id":0}}
+    requete = db.people.aggregate([group,project1, unwind, project2,match,unwind2,project3])
+    for row in requete:
+        ret.append(row)
+    project={"$project": { "count": { "$size":"$starships" },"homeworld":"$homeworld"}}
+    sort={"$sort":{"count":-1}}
+    homeworld_id_tmp = list(db.people.aggregate([project,sort]))
+    homeworld_id = []
+    for element in homeworld_id_tmp:
+        homeworld_id.append(element['homeworld'])
+    requete = db.people.find({"homeworld":homeworld_id},{}) # Cette requete ne retourne rien non plus
+    for row in requete:
+        ret.append(row)
+    context["results"] = ret
     return render(request, 'requetes/analyst.html', context)
 
 def admin(request):
     context = {}
-    results = []
-    with open('requetes\\admin.csv') as csvfile:
-        spamreader = csv.reader(csvfile, delimiter=';')
-        for row in spamreader:
-            results.append(row)
-    context["results"] = results
+    ret = []
+    # db.printShardingStatus()
+
+    context["results"] = ret
     return render(request, 'requetes/admin.html', context)
 
 def home(request):
