@@ -16,23 +16,31 @@ db = session.connection['Project']
 def user(request):
     ret = []
     tempo = []
+    
+    #------------------#
     requete = db.people.find({"name":"C-3PO"})
     for row in requete:
         tempo.append(row)
     ret.append(tempo)
     tempo = []
+    
+    #------------------#
     tmp = db.people.find_one({"name": "C-3PO"}, {"height": 1, "_id": 0})['height']
     requete = db.people.find({'height':{"$gt":tmp}},{"name":1})
     for row in requete:
         tempo.append(row)
     ret.append(tempo)
-    tempo = []    
+    tempo = []  
+    
+    #------------------#  
     tmp = (db.starship.find( {"name": "CR90 corvette"}, {"film":1,"_id":0})[0])['film']
     requete = db.film.find({"_id":{"$in": tmp}},{"title":1})
     for row in requete:
         tempo.append(row)
     ret.append(tempo)
     tempo = []
+    
+    #------------------#
     unwind = {"$unwind":"$films"}
     group = {"$group":{"_id":"$films", "count":{"$sum":1}}}
     match = {"$match":{"_id":3}}
@@ -48,11 +56,15 @@ def analyst(request):
     context = {}
     ret = []
     tempo = []
+    
+    #------------------#
     requete = db.planet.find({"people.films":{"$size":6}},{"name":1})
     for row in requete:
         tempo.append(row)
     ret.append(tempo)
     tempo = []
+
+    #------------------#
     mean= {"$group" :{"_id":'$species',"avgSize":{"$avg":'$height'}}}
     sort = {"$sort" : {"avgSize":-1}}
     limit = {"$limit":1}
@@ -65,6 +77,8 @@ def analyst(request):
         tempo.append(row)
     ret.append(tempo)
     tempo = []
+
+    #------------------#
     group ={"$group":{"_id":'$species', "avgSize":{"$avg":'$height'},"stdSize":{"$stdDevSamp":'$height'}, "peoples":{"$push":'$$ROOT'}}}
     project1= {"$project" :{"sum":{"$sum":['$avgSize','$stdSize']},"peoples":1}}
     unwind={"$unwind":'$peoples'}
@@ -77,13 +91,17 @@ def analyst(request):
         tempo.append(row)
     ret.append(tempo)
     tempo = []
+
+    #------------------#
     project={"$project": { "count": { "$size":"$starships" },"homeworld":"$homeworld"}}
     sort={"$sort":{"count":-1}}
-    homeworld_id_tmp = list(db.people.aggregate([project,sort]))
+    homeworld_id_tmp = list(db.people.aggregate([project,sort]))[0]["homeworld"]
+    """
     homeworld_id = []
     for element in homeworld_id_tmp:
         homeworld_id.append(element['homeworld'])
-    requete = db.people.find({"homeworld":homeworld_id},{}) # Cette requete ne retourne rien non plus
+    """
+    requete = db.people.find({"homeworld":homeworld_id_tmp},{"name":1})
     for row in requete:
         tempo.append(row)
     ret.append(tempo)
