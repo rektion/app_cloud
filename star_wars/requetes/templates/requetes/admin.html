@@ -127,13 +127,19 @@
         <a href="{% url 'analyst' %}">Analyste</a>
       </div>
 
+      <div class="container">
+        <div class="titre">
+            Infos clusters
+        </div>
+    </div>
+
     {% block content %}
 
     Requetes administrateur à insérer ici
 
     {% csrf_token %}
     {% for field in results  %}
-    {{ field }}
+        {{ field }}
     {% endfor %}
 </body>
 

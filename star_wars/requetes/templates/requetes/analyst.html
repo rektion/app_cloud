@@ -126,15 +126,38 @@
         <a href="{% url 'analyst' %}">Analyste</a>
     </div>
 
-    {% block content %}
+    <div class="container">
+        <div class="titre">
+            Requêtes complexes
+        </div>
+        <div class="intro">
+            <div class="bloc_header">
+                <br><strong>Quelles sont les planètes dont au moins un résident est apparu dans tous les films ?</strong> <br><br>
+                {% for field in results.0  %}
+                {{ field }}<br><br>
+            {% endfor %}<br>
+            </div>
+            <div class="bloc_header">
+                <br><strong>Quelle classe de vaisseau a été la plus conduite par la plus grande espèce ?</strong> <br><br>
+                {% for field in results.1  %}
+                {{ field }}<br><br>
+            {% endfor %}<br>
+            </div>
+            <div class="bloc_header">
+                <br><strong>Nom des vaisseaux dont la taille du conducteur est supérieure, d’un écart-type, à la moyenne de son espèce</strong> <br><br>
+                {% for field in results.2  %}
+                {{ field }}<br><br>
+            {% endfor %}<br>
+            </div>
+            <div class="bloc_header">
+                <br><strong>Les personnes qui sont nées sur la même planète que la personne qui conduit le plus de vaisseau ou qui conduit un vaisseau spécifique</strong> <br><br>
+                {% for field in results.3  %}
+                {{ field }}<br><br>
+            {% endfor %}<br>
+            </div>
+        </div>
+    </div>
 
-    Requetes analyst à insérer ici
-
-    {% csrf_token %}
-    {% for field in results  %}
-    {{ field }}
-    {% endfor %}
 </body>
 
-{% endblock %}
 </html>

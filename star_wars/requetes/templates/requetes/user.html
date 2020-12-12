@@ -127,16 +127,39 @@
         <a href="{% url 'analyst' %}">Analyste</a>
       </div>
     
-    {% block content %}
+    <div class="container">
+        <div class="titre">
+            Requêtes simples
+        </div>
+        <div class="intro">
+            <div class="bloc_header">
+                <br><strong>De quelle espèce est un personnage spécifique ?</strong> <br><br>
+                {% for field in results.0  %}
+                    {{ field }}<br><br>
+                {% endfor %}<br>
+            </div>
+            <div class="bloc_header">
+                <br><strong>Quels sont les personnages plus grand qu’une certaine personne ?</strong> <br><br>
+                {% for field in results.1  %}
+                    {{ field }}<br><br>
+                {% endfor %}<br>
+            </div>
+            <div class="bloc_header">
+                <br><strong>Quels sont les films dans lesquels, un certain vaisseau est apparu ?</strong> <br><br>
+                {% for field in results.2  %}
+                    {{ field }}<br><br>
+                {% endfor %}<br>
+            </div>
+            <div class="bloc_header">
+                <br><strong>Combien de planètes sont apparues dans un film en particulier ?</strong> <br><br>
+                {% for field in results.3  %}
+                    {{ field }}<br><br>
+                {% endfor %}<br>
+            </div>
+        </div>
+    </div>
 
-    Requetes utilisateur à insérer ici
-
-    {% csrf_token %}
-    {% for field in results  %}
-    {{ field }}
-    {% endfor %}
 </body>
 
 
-{% endblock %}
 </html>
