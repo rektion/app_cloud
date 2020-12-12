@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Requêtes administrateur</title>
 </head>
-{% block content %}
 
 <style>
     body {
@@ -44,7 +43,7 @@
         margin: 0;
         }
         
-        .navbar a.active{
+        .navbar a:active{
         background-color: var(--orange_clair);
         color : white;
         }
@@ -124,9 +123,11 @@
     <div class="navbar">
         <a href="{% url 'home' %}">Accueil</a>
         <a href="{% url 'user' %}">Utilisateur</a>
-        <a href="{% url 'analyst' %}">Analyste</a>
         <a href="{% url 'admin' %}">Administrateur</a>
+        <a href="{% url 'analyst' %}">Analyste</a>
       </div>
+
+    {% block content %}
 
     Requetes administrateur à insérer ici
 
