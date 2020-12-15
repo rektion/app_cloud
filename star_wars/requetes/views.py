@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from pymongo import MongoClient
 from ssh_pymongo import MongoSession
-import csv
+from .forms import ChoiceForm
 
 session = MongoSession(
     host="devicimongodb028.westeurope.cloudapp.azure.com",
@@ -110,12 +110,21 @@ def analyst(request):
     return render(request, 'requetes/analyst.html', context)
 
 def admin(request):
+    form = ChoiceForm()
     context = {}
-    ret = []
-    # db.printShardingStatus()
 
-    context["results"] = ret
+    db2 = session.connection['config']
+    test = db2.shards
+
+    if request.POST:
+        if form.is_valid():
+            print("on est al")
+            pass
+    else:
+        context['form'] = form
+
     return render(request, 'requetes/admin.html', context)
+    
 
 def home(request):
     return render(request, 'requetes/home.html')

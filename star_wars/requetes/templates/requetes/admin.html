@@ -135,7 +135,16 @@
 
     {% block content %}
 
-    Requetes administrateur à insérer ici
+    {% if form %}
+    <form method="POST" class="post-form">
+        {% csrf_token %}
+        {{form}} <br>
+        <div class="button">
+            <button type="submit" class="button button3">Accéder aux statistiques des shards</button>
+        </div>
+    </form>
+    {% endif %}
+    
 
     {% csrf_token %}
     {% for field in results  %}
